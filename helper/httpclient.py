@@ -10,6 +10,12 @@ class httpclient:
         except Exception as e:
             print e
             return ''
+    def post(self,url,data):
+        try:
+            return urllib2.urlopen(url,data).read()
+        except Exception as e:
+            print e
+            return ''
     
             
         
