@@ -13,10 +13,14 @@ consume_key="4293240035"
 consume_secret="eb59f40b252b8826646fd457ef9cb4d9"
 authorize_url="https://api.weibo.com/oauth2/authorize"
 access_token_url="https://api.weibo.com/oauth2/access_token"
+access_token="2.00NDjtACBrzXgEc924aa3e45wPlD2C"
 class sina:
     def __init__(self):
         self.prefix="https://api.weibo.com/2/"
         self.http=httpclient.httpclient()
+        self.access_token=access_token
+    def login():
+        pass
     def get_public_timeline(self,access_token,count=50,page=1,base_app=0):
         """
         返回最新的公共微博 http://open.weibo.com/wiki/2/statuses/public_timeline
@@ -100,16 +104,16 @@ class sina:
         print request_url
         return json.loads(self.http.get(request_url))
     
-    def get_country(self,access_token,language="zh-cn",capital=''):
+    def get_country(self,language="zh-cn",capital=''):
         """获取国家列表
         capital 国家的首字母，a-z，可为空代表返回全部，默认为全部。
         language 返回的语言版本，zh-cn：简体中文、zh-tw：繁体中文、english：英文，默认为zh-cn。
         """
         request_url=''
         if capital=='':
-            request_url=self.prefix+"common/get_country.json?"+urllib.urlencode({"access_token":access_token,"source":APP_KEY,"language":language})
+            request_url=self.prefix+"common/get_country.json?"+urllib.urlencode({"access_token":self.access_token,"source":APP_KEY,"language":language})
         else:
-            request_url=self.prefix+"common/get_country.json?"+urllib.urlencode({"access_token":access_token,"source":APP_KEY,"language":language,"capital":capital})
+            request_url=self.prefix+"common/get_country.json?"+urllib.urlencode({"access_token":self.access_token,"source":APP_KEY,"language":language,"capital":capital})
         print request_url
         return json.loads(self.http.get(request_url))
 
@@ -124,6 +128,14 @@ class sina:
             request_url=self.prefix+"common/get_province.json?"+urllib.urlencode({"access_token":access_token,"source":APP_KEY,"language":language,"province":province})
         else:
             request_url=self.prefix+"common/get_province.json?"+urllib.urlencode({"access_token":access_token,"source":APP_KEY,"language":language,"capital":capital,"province":province})
+        print request_url
+        return json.loads(self.http.get(request_url))
+
+    def get_timezone(self,language="zh-cn"):
+        """get_timezone
+        language 返回的语言版本，zh-cn：简体中文、zh-tw：繁体中文、english：英文，默认为zh-cn。
+        """
+        request_url=self.prefix+"common/get_timezone.json?"+urllib.urlencode({"access_token":self.access_token,"source":APP_KEY,"language":language})
         print request_url
         return json.loads(self.http.get(request_url))
 
@@ -152,4 +164,4 @@ if __name__=="__main__":
     ##print pprint(client.get_public_timeline())
     #print pprint(client.hot_comments_weekly(access_token="2.00NDjtACBrzXgEc4afeab580X2PnKB"))
     #print client.test_oauth()
-    print pprint(client.get_province(access_token="2.00NDjtACBrzXgEc4afeab580X2PnKB",country="001"))
+    print pprint(client.get_country())
