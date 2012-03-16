@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}index page{% end %}
+{% block title %}country page{% end %}
 {% block external_css %}
 <link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
 {% end %}
@@ -19,7 +19,7 @@
      </thead>
    <tbody>
      {% for item in country %}
-     <tr><td>{{ item["id"] }}</td><td> <a href="/get_province/{{ item["id"] }}">{{ item["name"] }}</a></td></tr>
+     <tr><td>{{ item["id"] }}</td><td> <a class="ajax_link" url="/get_province/{{ item["id"] }}">{{ item["name"] }}</a></td></tr>
      {% end %}
    </tbody>
    <tfoot>

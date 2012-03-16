@@ -1,14 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html>
-  <head>
-    <title>{% block title %}Default title{% end %}</title>
-
+<head>
+<title>{% block title %}Default title{% end %}</title>
 <link href="/static/css/reset.css" rel="stylesheet" type="text/css"/>
 <link href="/static/css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css"/>
+{% block external_css %}{% end %}
 <script src="/static/js/jquery-1.7.1.min.js" type="text/javascript"></script>
 <script src="/static/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
-
-  </head>
+{% block external_js %}{% end %}
+</head>
   <body>
    {% block body %}Coming Soon......{% end %}
   </body>

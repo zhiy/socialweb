@@ -6,13 +6,34 @@ import tornado.options
 import os,sys
 from sina import *
 import json
+import uimodules
 tornado.options.parse_command_line()
+
+class TestHandler(tornado.web.RequestHandler):
+    def get(self):
+        return self.render("templates/main.html")
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         sina_client=sina()
         country=sina_client.get_country()
         return self.render("templates/index.html",country=country)
+class countryhandler(tornado.web.RequestHandler):
+    def get(self):
+        sina_client=sina()
+        country=sina_client.get_country()
+        return self.render("templates/country.html",country=country)
+class provincehandler(tornado.web.RequestHandler):
+    def get(self,id):
+        sina_client=sina()
+        provinces=sina_client.get_province(id)
+        return self.render("templates/provinces.html",provinces=provinces)
+
+class cityhandler(tornado.web.RequestHandler):
+    def get(self,id):
+        sina_client=sina()
+        cities=sina_client.get_city(id)
+        return self.render("templates/cities.html",cities=cities)
 
 settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
@@ -20,9 +41,14 @@ settings = {
     "login_url": "/login",
     "xsrf_cookies": False,
     "debug": True,
+    "ui_modules": uimodules,
     }
 application = tornado.web.Application([
-    (r"/", MainHandler),],**settings)
+    (r"/test", TestHandler),
+    (r"/", MainHandler),
+    (r"/get_country",countryhandler),
+    (r"/get_province/(.*)",provincehandler),
+    (r"/get_cities/(.*)",cityhandler)],**settings)
 
 if __name__ == "__main__":
     port=int(sys.argv[1])

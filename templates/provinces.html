@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title></title>
+<link href="/static/css/reset.css" rel="stylesheet" type="text/css"/>
+<link href="/static/css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css"/>
+<link href="/static/css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
+<script src="/static/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script src="/static/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+<script src="/static/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function() {
+    $('#provinces').dataTable();
+} );
+</script>
+</head>
+
+<body>
+
+<div id="province" class="province" style="width:400px">
+<p>All country list</p>
+ <table cellpadding="0" cellspacing="0" border="0" class="display" id="provinces">
+   <thead>
+     <tr>
+       <th>Province Number</th>
+       <th>Name</th>
+     </tr>
+     </thead>
+   <tbody>
+     {% for item in provinces %}
+     <tr><td>{{ item["id"] }}</td><td> <a class="ajax_link" href="/get_cities/{{ item["id"] }}">{{ item["name"] }}</a></td></tr>
+     {% end %}
+   </tbody>
+   <tfoot>
+     <tr>
+       <th>Province Number</th>
+       <th>Name</th>
+     </tr>
+   </tfoot>
+ </table>
+</div>
+</body> </html>

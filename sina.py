@@ -13,7 +13,7 @@ consume_key="4293240035"
 consume_secret="eb59f40b252b8826646fd457ef9cb4d9"
 authorize_url="https://api.weibo.com/oauth2/authorize"
 access_token_url="https://api.weibo.com/oauth2/access_token"
-access_token="2.00NDjtACBrzXgEc924aa3e45wPlD2C"
+access_token="2.00NDjtACBrzXgE04aa34edb9bx8FCB"
 class sina:
     def __init__(self):
         self.prefix="https://api.weibo.com/2/"
@@ -90,7 +90,7 @@ class sina:
     ##################################
     # 公共服务 API
     ##################################
-    def get_province(self,access_token,country,language="zh-cn",capital=''):
+    def get_province(self,country,language="zh-cn",capital=''):
         """获取省份列表
         capital 国家的首字母，a-z，可为空代表返回全部，默认为全部。
         language 返回的语言版本，zh-cn：简体中文、zh-tw：繁体中文、english：英文，默认为zh-cn。
@@ -98,12 +98,18 @@ class sina:
         """
         request_url=''
         if capital=='':
-            request_url=self.prefix+"common/get_province.json?"+urllib.urlencode({"access_token":access_token,"source":APP_KEY,"language":language,"country":country})
+            request_url=self.prefix+"common/get_province.json?"+urllib.urlencode({"access_token":self.access_token,"source":APP_KEY,"language":language,"country":country})
         else:
-            request_url=self.prefix+"common/get_province.json?"+urllib.urlencode({"access_token":access_token,"source":APP_KEY,"language":language,"capital":capital,"country":country})
+            request_url=self.prefix+"common/get_province.json?"+urllib.urlencode({"access_token":self.access_token,"source":APP_KEY,"language":language,"capital":capital,"country":country})
         print request_url
-        return json.loads(self.http.get(request_url))
-    
+        provinces=json.loads(self.http.get(request_url))
+        result=[]
+        for province in provinces:
+            item={}
+            item["id"]=province.keys()[0]
+            item["name"]=province.values()[0]
+            result.append(item)
+        return result
     def get_country(self,language="zh-cn",capital=''):
         """获取国家列表
         capital 国家的首字母，a-z，可为空代表返回全部，默认为全部。
@@ -115,9 +121,16 @@ class sina:
         else:
             request_url=self.prefix+"common/get_country.json?"+urllib.urlencode({"access_token":self.access_token,"source":APP_KEY,"language":language,"capital":capital})
         print request_url
-        return json.loads(self.http.get(request_url))
+        countries=json.loads(self.http.get(request_url))
+        result=[]
+        for country in countries:
+            item={}
+            item["id"]=country.keys()[0]
+            item["name"]=country.values()[0]
+            result.append(item)
+        return result
 
-    def get_city(self,access_token,province,language="zh-cn",capital=''):
+    def get_city(self,province,language="zh-cn",capital=''):
         """获取城市列表
         capital 国家的首字母，a-z，可为空代表返回全部，默认为全部。
         language 返回的语言版本，zh-cn：简体中文、zh-tw：繁体中文、english：英文，默认为zh-cn。
@@ -125,11 +138,18 @@ class sina:
         """
         request_url=''
         if capital=='':
-            request_url=self.prefix+"common/get_province.json?"+urllib.urlencode({"access_token":access_token,"source":APP_KEY,"language":language,"province":province})
+            request_url=self.prefix+"common/get_city.json?"+urllib.urlencode({"access_token":self.access_token,"source":APP_KEY,"language":language,"province":province})
         else:
-            request_url=self.prefix+"common/get_province.json?"+urllib.urlencode({"access_token":access_token,"source":APP_KEY,"language":language,"capital":capital,"province":province})
+            request_url=self.prefix+"common/get_city.json?"+urllib.urlencode({"access_token":self.access_token,"source":APP_KEY,"language":language,"capital":capital,"province":province})
         print request_url
-        return json.loads(self.http.get(request_url))
+        cities=json.loads(self.http.get(request_url))
+        result=[]
+        for city in cities:
+            item={}
+            item["id"]=city.keys()[0]
+            item["name"]=city.values()[0]
+            result.append(item)
+        return result
 
     def get_timezone(self,language="zh-cn"):
         """get_timezone
@@ -163,5 +183,5 @@ if __name__=="__main__":
     client=sina()
     ##print pprint(client.get_public_timeline())
     #print pprint(client.hot_comments_weekly(access_token="2.00NDjtACBrzXgEc4afeab580X2PnKB"))
-    #print client.test_oauth()
-    print pprint(client.get_country())
+    print client.test_oauth()
+    #print pprint(client.get_country())
