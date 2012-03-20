@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import tornado.web
-class country:
+class Country:
     def render(self,country):
         return self.render_string("templates/module-country.html", country=country)
-class Entry(tornado.web.UIModule):
-    def embedded_css(self):
-        return ".entry { margin-bottom: 1em; }"
 
-    def render(self, show_comments=False):
-        return self.render_string("templates/test.html")
+class User(tornado.web.UIModule):
+    def render(self,user):
+        return self.render_string("templates/module_user.html",user=user)
 

@@ -13,7 +13,7 @@ consume_key="4293240035"
 consume_secret="eb59f40b252b8826646fd457ef9cb4d9"
 authorize_url="https://api.weibo.com/oauth2/authorize"
 access_token_url="https://api.weibo.com/oauth2/access_token"
-access_token="2.00NDjtACBrzXgE04aa34edb9bx8FCB"
+access_token="2.00NDjtACBrzXgEbd3c5a1e61zuLbPD"
 class sina:
     def __init__(self):
         self.prefix="https://api.weibo.com/2/"
@@ -21,54 +21,54 @@ class sina:
         self.access_token=access_token
     def login():
         pass
-    def get_public_timeline(self,access_token,count=50,page=1,base_app=0):
+    def get_public_timeline(self,count=50,page=1,base_app=0):
         """
         返回最新的公共微博 http://open.weibo.com/wiki/2/statuses/public_timeline
         count 单页返回的记录条数，默认为50
         page 返回结果的页码，默认为1。
         base_app 是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。
         """
-        request_url=self.prefix+"statuses/public_timeline.json?"+urllib.urlencode({"source":APP_KEY,"access_token":access_token,"count":count,"page":page,"base_app":base_app})
+        request_url=self.prefix+"statuses/public_timeline.json?"+urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"count":count,"page":page,"base_app":base_app})
         print request_url
         return json.loads(self.http.get(request_url))
     
-    def hot_repost_daily(self,access_token,count=50,page=1,base_app=0):
+    def hot_repost_daily(self,count=50,page=1,base_app=0):
         """
         按天返回热门微博转发榜的微博列表
         """
-        request_url=self.prefix+"statuses/hot/repost_daily.json?"+urllib.urlencode({"source":APP_KEY,"access_token":access_token,"count":count,"page":page,"base_app":base_app})
+        request_url=self.prefix+"statuses/hot/repost_daily.json?"+urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"count":count,"page":page,"base_app":base_app})
         print request_url
         return json.loads(self.http.get(request_url))
     
-    def hot_repost_weekly(self,access_token,count=50,page=1,base_app=0):
+    def hot_repost_weekly(self,count=50,page=1,base_app=0):
         """
         按周返回热门微博转发榜的微博列表
         """
-        request_url=self.prefix+"statuses/hot/repost_weekly.json?"+urllib.urlencode({"source":APP_KEY,"access_token":access_token,"count":count,"page":page,"base_app":base_app})
+        request_url=self.prefix+"statuses/hot/repost_weekly.json?"+urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"count":count,"page":page,"base_app":base_app})
         print request_url
         return json.loads(self.http.get(request_url))
     
-    def hot_comments_daily(self,access_token,count=50,page=1,base_app=0):
+    def hot_comments_daily(self,count=50,page=1,base_app=0):
         """
         按天返回热门微博评论榜的微博列表
         """
-        request_url=self.prefix+"statuses/hot/comments_daily.json?"+urllib.urlencode({"source":APP_KEY,"access_token":access_token,"count":count,"page":page,"base_app":base_app})
+        request_url=self.prefix+"statuses/hot/comments_daily.json?"+urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"count":count,"page":page,"base_app":base_app})
         print request_url
         return json.loads(self.http.get(request_url))
     
-    def hot_comments_weekly(self,access_token,count=50,page=1,base_app=0):
+    def hot_comments_weekly(self,count=50,page=1,base_app=0):
         """
         按周返回热门微博评论榜的微博列表
         """
-        request_url=self.prefix+"statuses/hot/comments_weekly.json?"+urllib.urlencode({"source":APP_KEY,"access_token":access_token,"count":count,"page":page,"base_app":base_app})
+        request_url=self.prefix+"statuses/hot/comments_weekly.json?"+urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"count":count,"page":page,"base_app":base_app})
         print request_url
         return json.loads(self.http.get(request_url))
 
-    def hot_users(self,source,category="default"):
+    def hot_users(self,category="default"):
         """
         返回系统推荐的热门用户列表 http://open.weibo.com/wiki/2/suggestions/users/hot
         """
-        request_url=self.prefix+"suggestions/users/hot.json?"+urllib.urlencode({"source":APP_KEY,"category":category})
+        request_url=self.prefix+"suggestions/users/hot.json?"+urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"category":category})
         print request_url
         return json.loads(self.http.get(request_url))
 
@@ -183,5 +183,5 @@ if __name__=="__main__":
     client=sina()
     ##print pprint(client.get_public_timeline())
     #print pprint(client.hot_comments_weekly(access_token="2.00NDjtACBrzXgEc4afeab580X2PnKB"))
-    print client.test_oauth()
-    #print pprint(client.get_country())
+    #print client.test_oauth()
+    print pprint(client.hot_users())

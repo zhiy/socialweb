@@ -19,7 +19,7 @@
      </thead>
    <tbody>
      {% for item in country %}
-     <tr><td>{{ item["id"] }}</td><td> <a class="ajax_link" url="/get_province/{{ item["id"] }}">{{ item["name"] }}</a></td></tr>
+     <tr><td>{{ item["id"] }}</td><td> <a class="ajax_link" href="/get_province/{{ item["id"] }}">{{ item["name"] }}</a></td></tr>
      {% end %}
    </tbody>
    <tfoot>

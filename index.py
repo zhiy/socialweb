@@ -35,6 +35,12 @@ class cityhandler(tornado.web.RequestHandler):
         cities=sina_client.get_city(id)
         return self.render("templates/cities.html",cities=cities)
 
+class hotusers_handler(tornado.web.RequestHandler):
+    def get(self):
+        sina_client=sina()
+        users=sina_client.hot_users()
+        return self.render("templates/users.html",users=users)
+        
 settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
     "cookie_secret": "61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
@@ -48,7 +54,8 @@ application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/get_country",countryhandler),
     (r"/get_province/(.*)",provincehandler),
-    (r"/get_cities/(.*)",cityhandler)],**settings)
+    (r"/get_cities/(.*)",cityhandler),
+    (r"/hotusers",hotusers_handler)],**settings)
 
 if __name__ == "__main__":
     port=int(sys.argv[1])
