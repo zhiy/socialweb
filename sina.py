@@ -13,7 +13,7 @@ consume_key="4293240035"
 consume_secret="eb59f40b252b8826646fd457ef9cb4d9"
 authorize_url="https://api.weibo.com/oauth2/authorize"
 access_token_url="https://api.weibo.com/oauth2/access_token"
-access_token="2.00NDjtACBrzXgEbd3c5a1e61zuLbPD"
+access_token="2.00NDjtACBrzXgE3045a299410caR1h"
 class sina:
     def __init__(self):
         self.prefix="https://api.weibo.com/2/"
@@ -87,6 +87,70 @@ class sina:
         request_url=self.prefix+"suggestions/statuses/hot.json?"+urllib.urlencode({"source":APP_KEY,"count":count,"page":page})
         print request_url
         return json.loads(self.http.get(request_url))
+
+    ##################################
+    # 用户相关 API
+    ##################################
+
+    def friends_timeline_ids(self,feature=0,page=1,count=1,max_id=0,since_id=0,base_app=0):
+        """
+        获取当前登录用户及其所关注用户的最新微博的ID
+        since_id int64	若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0。
+        max_id int64	若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
+        count 单页返回的记录条数，默认为50。
+        page 返回结果的页码，默认为1。
+        base_app 是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。
+        feature 过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。
+        """
+        request_url=self.prefix+"statuses/friends_timeline/ids.json?"+urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"count":count,"page":page,"feature":feature,"max_id":max_id,"since_id":since_id,"base_app":base_app})
+        print request_url
+        return json.loads(self.http.get(request_url))
+
+    def friends_timeline(self,feature=0,page=1,count=1,max_id=0,since_id=0,base_app=0):
+        """
+        获取当前登录用户及其所关注用户的最新微博
+        since_id int64	若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0。
+        max_id int64	若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
+        count 单页返回的记录条数，默认为50。
+        page 返回结果的页码，默认为1。
+        base_app 是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。
+        feature 过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。
+        """
+        request_url=self.prefix+"statuses/friends_timeline.json?"+urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"count":count,"page":page,"feature":feature,"max_id":max_id,"since_id":since_id,"base_app":base_app})
+        print request_url
+        return json.loads(self.http.get(request_url))
+
+    def user_timeline(self,trim_user=0,feature=0,page=1,count=1,max_id=0,since_id=0,base_app=0,uid='',screen_name=''):
+        """
+        获取某个用户最新发表的微博列表
+        uid 需要查询的用户ID。
+        screen_name 需要查询的用户昵称。
+        trim_user 返回值中user信息开关，0：返回完整的user信息、1：user字段仅返回user_id，默认为0。
+        since_id int64	若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0。
+        max_id int64	若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
+        count 单页返回的记录条数，默认为50。
+        page 返回结果的页码，默认为1。
+        base_app 是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。
+        feature 过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。
+        参数uid与screen_name二者必选其一，且只能选其一
+        参数uid与screen_name都没有或错误，则默认返回当前登录用户的数据
+        """
+        request_url=self.prefix+"statuses/user_timeline.json?"+urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"count":count,"page":page,"feature":feature,"max_id":max_id,"since_id":since_id,"base_app":base_app,"trim_user":trim_user})
+        print request_url
+        return json.loads(self.http.get(request_url))
+
+    def new_tweet(self,text,lat=0,long=0):
+        """
+        发布一条新微博
+        status 要发布的微博文本内容，必须做URLencode，内容不超过140个汉字。
+        lat float	纬度，有效范围：-90.0到+90.0，+表示北纬，默认为0.0。
+        long float	经度，有效范围：-180.0到+180.0，+表示东经，默认为0.0。
+        annotations	string	元数据，主要是为了方便第三方应用记录一些适合于自己使用的信息，每条微博可以包含一个或者多个元数据，必须以json字串的形式提交，字串长度不超过512个字符，具体内容可以自定。
+        """
+        request_url=self.prefix+"statuses/update.json"
+        data=urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"lat":lat,"long":long,"status":text})
+        print request_url
+        return json.loads(self.http.post(request_url,data))
     ##################################
     # 公共服务 API
     ##################################
@@ -160,7 +224,7 @@ class sina:
         return json.loads(self.http.get(request_url))
 
     def test_oauth(self):
-        request_url="https://api.weibo.com/oauth2/authorize?"+urllib.urlencode({"client_id":client_id,"redirect_uri":"http://127.0.0.1:8888"})
+        request_url="https://api.weibo.com/oauth2/authorize?"+urllib.urlencode({"client_id":client_id,"redirect_uri":"http://122.248.200.28:8888"})
         print request_url+"\n"
         print "goto the page"
         accepted = 'n'
@@ -184,4 +248,4 @@ if __name__=="__main__":
     ##print pprint(client.get_public_timeline())
     #print pprint(client.hot_comments_weekly(access_token="2.00NDjtACBrzXgEc4afeab580X2PnKB"))
     #print client.test_oauth()
-    print pprint(client.hot_users())
+    print pprint(client.new_tweet("test my application!测试测试"))

@@ -5,6 +5,7 @@ import tornado.web
 import tornado.options
 import os,sys
 from sina import *
+from tencent import *
 import json
 import uimodules
 tornado.options.parse_command_line()
@@ -36,10 +37,18 @@ class cityhandler(tornado.web.RequestHandler):
         return self.render("templates/cities.html",cities=cities)
 
 class hotusers_handler(tornado.web.RequestHandler):
+    def get(self,category='default'):
+        sina_client=sina()
+        sina_users=sina_client.hot_users(category)
+        #tencent_client=tencent()
+        #tencent_users=tencent_client.getTrendsFamouslist(101)["data"]["info"]
+        return self.render("templates/users.html",category=category,users=sina_users)
+
+class new_public_tweets_handler(tornado.web.RequestHandler):
     def get(self):
         sina_client=sina()
-        users=sina_client.hot_users()
-        return self.render("templates/users.html",users=users)
+        tweets=sina_client.get_public_timeline()["statuses"]
+        return self.render("templates/new_tweets.html",tweets=tweets)
         
 settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static"),
@@ -55,7 +64,8 @@ application = tornado.web.Application([
     (r"/get_country",countryhandler),
     (r"/get_province/(.*)",provincehandler),
     (r"/get_cities/(.*)",cityhandler),
-    (r"/hotusers",hotusers_handler)],**settings)
+    (r"/hotusers/(.*)",hotusers_handler),
+    (r"/new_public_tweets",new_public_tweets_handler)],**settings)
 
 if __name__ == "__main__":
     port=int(sys.argv[1])

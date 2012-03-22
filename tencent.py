@@ -30,11 +30,11 @@ class tencent:
     ############
     #trends api 热度，趋势
     ###########
-    def getTrendsFamouslist(self,format,classid,subclassid):
+    def getTrendsFamouslist(self,classid='',subclassid=''):
         """get famouslist
         http://wiki.open.t.qq.com/index.php/%E7%83%AD%E5%BA%A6%EF%BC%8C%E8%B6%8B%E5%8A%BF/%E6%8E%A8%E8%8D%90%E5%90%8D%E4%BA%BA%E5%88%97%E8%A1%A8
         """
-        request_url=self.prefix+"trends/famouslist?"+urllib.urlencode({"format":format,"classid":classid,"subclassid":subclassid})
+        request_url=self.prefix+"trends/famouslist?"+urllib.urlencode({"format":"json","classid":classid,"subclassid":subclassid})
         return json.loads(self.http.get(request_url))
     def getTrendsHt(self,type=1,format=json,reqnum=20,pos=0):
         """get hot topic
@@ -56,5 +56,5 @@ class tencent:
 
 if __name__=="__main__":
     client=tencent()
-    print pprint(client.getTrendsHt(pos=20))
+    print pprint(client.getTrendsFamouslist(101))
 

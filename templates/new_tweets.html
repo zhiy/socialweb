@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}new tweets page{% end %}
+{% block external_css %}
+{% end %}
+{% block external_js %}
+<script src="/static/js/socialweb.js" type="text/javascript"></script>
+{% end %}
+{% block body %}
+<div id="tweets" class="tweets" style="width:400px">
+  {% for tweet in tweets %}
+  <hr>
+  {% module Tweet(tweet) %}
+  {% end %}
+</div>
+{% end %}
