@@ -13,7 +13,7 @@ consume_key="4293240035"
 consume_secret="eb59f40b252b8826646fd457ef9cb4d9"
 authorize_url="https://api.weibo.com/oauth2/authorize"
 access_token_url="https://api.weibo.com/oauth2/access_token"
-access_token="2.00NDjtACBrzXgE3045a299410caR1h"
+access_token="2.00NDjtACBrzXgE3ec16a3046PxZWnD"
 class sina:
     def __init__(self):
         self.prefix="https://api.weibo.com/2/"
@@ -92,7 +92,7 @@ class sina:
     # 用户相关 API
     ##################################
 
-    def friends_timeline_ids(self,feature=0,page=1,count=1,max_id=0,since_id=0,base_app=0):
+    def friends_timeline_ids(self,feature=0,page=1,count=50,max_id=0,since_id=0,base_app=0):
         """
         获取当前登录用户及其所关注用户的最新微博的ID
         since_id int64	若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0。
@@ -149,6 +149,24 @@ class sina:
         """
         request_url=self.prefix+"statuses/update.json"
         data=urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"lat":lat,"long":long,"status":text})
+        print request_url
+        return json.loads(self.http.post(request_url,data))
+
+    def comments_create(self,id,text,comment_ori=0):
+        """
+        对一条微博进行评论
+        """
+        request_url=self.prefix+"comments/create.json"
+        data=urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"id":id,"comment":text,"comment_ori":comment_ori})
+        print request_url
+        return json.loads(self.http.post(request_url,data))
+
+    def statuses_repost(self,id,text,is_comment=0):
+        """
+        转发一条微博
+        """
+        request_url=self.prefix+"statuses/repost.json"
+        data=urllib.urlencode({"source":APP_KEY,"access_token":self.access_token,"id":id,"status":text,"is_comment":is_comment})
         print request_url
         return json.loads(self.http.post(request_url,data))
     ##################################
@@ -248,4 +266,8 @@ if __name__=="__main__":
     ##print pprint(client.get_public_timeline())
     #print pprint(client.hot_comments_weekly(access_token="2.00NDjtACBrzXgEc4afeab580X2PnKB"))
     #print client.test_oauth()
-    print pprint(client.new_tweet("test my application!测试测试"))
+    #print pprint(client.new_tweet("test my application!测试测试"))
+    tweets_ids=client.friends_timeline_ids()["statuses"]
+    for id in tweets_ids:
+        print client.statuses_repost(id,"I like it!!!!")
+        time.sleep(3)
