@@ -4,7 +4,7 @@ import urllib2, urllib
 import json
 import time,sys
 sys.path.append("..")
-from helper import httpclient
+from helper import httpclient,MultiPartForm
 from helper.utils import *
 import urlparse
 APP_KEY="4293240035"
@@ -163,27 +163,22 @@ class sina:
         """
         request_url=self.prefix+"statuses/upload.json"
         pic_binary=open(pic_path,"rb")
-        form = httpclient.MultiPartForm()
-        #form.add_field('source', APP_KEY)
-        #form.add_field('access_token', self.access_token)
+        form = MultiPartForm()
+        form.add_field('source', APP_KEY)
+        form.add_field('access_token', self.access_token)
         form.add_field('lat', lat)
         form.add_field('long', long)
         form.add_field('status', text)
         # Add a file
         form.add_file('pic', pic_path,pic_binary)
         # Build the request
-        request = urllib2.Request(request_url+"?"+urllib.urlencode({"source":APP_KEY,"access_token":self.access_token}))
+        request = urllib2.Request(request_url)
         body = str(form)
-        request.add_header('Content-type', 'multipart/form-data')
+        request.add_header('Content-type', form.get_content_type())
         request.add_header('Content-length', len(body))
         request.add_data(body)
-        print 'OUTGOING DATA:'
-        print request.get_data()
         print 'SERVER RESPONSE:'
-        try:
-            print urllib2.urlopen(request).read()
-        except urllib2.HTTPError, error:
-            print error.read()
+        print urllib2.urlopen(request).read()
 
     def comments_create(self,id,text,comment_ori=0):
         """
@@ -296,10 +291,10 @@ class sina:
 
 if __name__=="__main__":
     client=sina()
-    #print pprint(client.get_public_timeline())
+    ##print pprint(client.get_public_timeline())
     #print pprint(client.hot_comments_weekly(access_token="2.00NDjtACBrzXgEc4afeab580X2PnKB"))
-    print client.test_oauth()
-    #print pprint(client.new_tweet_pic("hello world","pic.png"))
+    #print client.test_oauth()
+    print pprint(client.new_tweet_pic("hello world","pic.png"))
     #tweets_ids=client.friends_timeline_ids()["statuses"]
     #for id in tweets_ids:
     #   print client.statuses_repost(id,"I like it!!!!")
